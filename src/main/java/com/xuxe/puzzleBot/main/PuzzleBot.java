@@ -12,11 +12,11 @@ import java.util.logging.Logger;
 public class PuzzleBot extends JavaPlugin {
 
     public static HashMap<String, String> answersMap;
-    FileConfiguration config;
-    Logger logger;
+    private FileConfiguration config;
+    private Logger logger;
 
     public static boolean hasAnswer(String answer) {
-        return answersMap.containsKey(answer);
+        return answersMap.containsKey(answer); //NullPointer here for some reason
     }
 
     @Override
@@ -35,8 +35,6 @@ public class PuzzleBot extends JavaPlugin {
         getCommand("submit").setExecutor(new SubmitCommand(config));
 
         for (String s : answers) {
-            //TODO REMOVE THIS LINEw
-            logger.info(s);
             answersMap.put(s.substring(0, s.indexOf("->")), s);
         }
     }
