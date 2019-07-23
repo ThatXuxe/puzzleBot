@@ -1,0 +1,14 @@
+name: PuzzleBot
+main: com.xuxe.puzzleBot.main.PuzzleBot
+version: 1.0.0
+author: ThatXuxe
+commands:
+  submit:
+    permission: puzzlebot.submit
+    permission-message: You do not have have permission to submit answers.
+    aliases: answer
+    usage: "Usage: /submit <submission>"
+permissions:
+  puzzlebot.submit:
+    description: Allows submit command
+    default: true
