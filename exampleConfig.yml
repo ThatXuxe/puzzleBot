@@ -1,0 +1,3 @@
+answers: 
+  -foo->tp(world,2003,123,423)->message(heyhey)->kill 
+  -bar->tp(world,1233,-121,422)->message(hiya)
