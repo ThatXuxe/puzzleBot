@@ -1,0 +1,5 @@
+com\xuxe\puzzleBot\assets\ActionsIterator.class
+com\xuxe\puzzleBot\assets\SubmissionActionPool.class
+com\xuxe\puzzleBot\assets\Action.class
+com\xuxe\puzzleBot\commands\SubmitCommand.class
+com\xuxe\puzzleBot\main\PuzzleBot.class
