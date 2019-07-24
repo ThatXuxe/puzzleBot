@@ -1,6 +1,7 @@
 package com.xuxe.puzzleBot.main;
 
 import com.xuxe.puzzleBot.commands.SubmitCommand;
+import com.xuxe.puzzleBot.config.ConfigHandler;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -11,32 +12,45 @@ import java.util.logging.Logger;
 
 public class PuzzleBot extends JavaPlugin {
 
-    public static HashMap<String, String> answersMap;
+    public static HashMap<String, String> answersMap = new HashMap<>();
     private FileConfiguration config;
-    private Logger logger;
+
+    public PuzzleBot() {
+        config = getConfig();
+    }
 
     public static boolean hasAnswer(String answer) {
-        return answersMap.containsKey(answer); //NullPointer here for some reason
+        return answersMap.containsKey(answer);
+    }
+
+    @Override
+    public FileConfiguration getConfig() {
+        return config;
+    }
+
+    public void setConfig(FileConfiguration config) {
+        this.config = config;
     }
 
     @Override
     public void onEnable() {
-        config = getConfig();
-        logger = getLogger();
-        config.addDefault("answers", "");
-        saveConfig();
+        Logger logger = getLogger();
         logger.info("PuzzleBot has started.");
         List<String> answers = new ArrayList<>();
         if (config.contains("answers")) {
             answers = config.getStringList("answers");
-            logger.info("answers have been initialized");
+            logger.info("Answers have been initialized");
         } else
             logger.warning("No answers found in config.");
-        getCommand("submit").setExecutor(new SubmitCommand(config));
+        getCommand("submit").setExecutor(new SubmitCommand(config, logger));
+
 
         for (String s : answers) {
-            answersMap.put(s.substring(0, s.indexOf("->")), s);
+            ConfigHandler.createCounter(s.split("->")[0]);
+            answersMap.put(s.split("->")[0], s);
         }
+        config.options().copyDefaults(true);
+        saveConfig();
     }
     //Action sequence
     /*
