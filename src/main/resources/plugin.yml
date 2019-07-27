@@ -8,7 +8,15 @@ commands:
     permission-message: You do not have have permission to submit answers.
     aliases: answer
     usage: "Usage: /submit <submission>"
+  puzzle:
+    permission: puzzlebot.admin
+    permission-message: You do not have the permission to use this command
+    usage: "/puzzle reload"
 permissions:
   puzzlebot.submit:
     description: Allows submit command
     default: true
+  puzzlebot.admin:
+    description: Allows administrator commands
+    default: true
+    #TODO make this false

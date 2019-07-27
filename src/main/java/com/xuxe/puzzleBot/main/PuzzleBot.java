@@ -12,11 +12,14 @@ import java.util.logging.Logger;
 
 public class PuzzleBot extends JavaPlugin {
 
-    public static HashMap<String, String> answersMap = new HashMap<>();
+    public static HashMap<String, List<Action>> answersMap = new HashMap<>();
     private FileConfiguration config;
-
+    private static List<String> answers = new ArrayList<>();
+    private Logger logger;
     public PuzzleBot() {
         config = getConfig();
+        logger = getLogger();
+
     }
 
     public static boolean hasAnswer(String answer) {
@@ -36,21 +39,26 @@ public class PuzzleBot extends JavaPlugin {
     public void onEnable() {
         Logger logger = getLogger();
         logger.info("PuzzleBot has started.");
-        List<String> answers = new ArrayList<>();
+
+        getCommand("submit").setExecutor(new SubmitCommand(this, logger));
+        getCommand("puzzle reload").setExecutor(new ReloadCommand(this));
+        reloadHashConfig();
+        config.options().copyDefaults(true);
+        saveConfig();
+    }
+
+    public void reloadHashConfig() {
+        reloadConfig();
         if (config.contains("answers")) {
             answers = config.getStringList("answers");
             logger.info("Answers have been initialized");
         } else
             logger.warning("No answers found in config.");
-        getCommand("submit").setExecutor(new SubmitCommand(config, logger));
-
 
         for (String s : answers) {
-            ConfigHandler.createCounter(s.split("->")[0]);
-            answersMap.put(s.split("->")[0], s);
+            answersMap.put(s.split("->")[0], ActionsIterator.parseActions(s));
         }
-        config.options().copyDefaults(true);
-        saveConfig();
+        logger.info("answers loaded and mapped.");
     }
     //Action sequence
     /*

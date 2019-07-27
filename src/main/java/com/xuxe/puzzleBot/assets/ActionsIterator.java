@@ -5,16 +5,10 @@ import org.bukkit.Location;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class ActionsIterator {
-    private Logger logger;
 
-    public ActionsIterator(Logger logger) {
-        this.logger = logger;
-    }
-
-    public List<Action> parseActions(String actionSequence) {
+    public static List<Action> parseActions(String actionSequence) {
         String[] actions = popArray(actionSequence.split("->"));
         List<Action> processedActions = new ArrayList<>();
         for (String s : actions) {
@@ -25,7 +19,7 @@ public class ActionsIterator {
         return processedActions;
     }
 
-    private String[] popArray(String[] args) {
+    private static String[] popArray(String[] args) {
         if (args.length >= 2) {
             String[] newArray = new String[args.length - 1];
             System.arraycopy(args, 1, newArray, 0, newArray.length);
@@ -35,7 +29,7 @@ public class ActionsIterator {
         }
     }
 
-    private Action parseEachAction(String actionString) {
+    private static Action parseEachAction(String actionString) {
         Action action = new Action();
         String commandArgs = "";
         if (actionString.contains("("))
