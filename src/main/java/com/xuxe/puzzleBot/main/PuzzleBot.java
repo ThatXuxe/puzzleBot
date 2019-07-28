@@ -56,7 +56,7 @@ public class PuzzleBot extends JavaPlugin {
             logger.info("Answers have been initialized");
         } else
             logger.warning("No answers found in config.");
-
+        config.createSection("uses");
         for (String s : answers) {
             String[] answer = {s.split("->")[0]};
             if (answer[0].contains("~")) {

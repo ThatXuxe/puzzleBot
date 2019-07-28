@@ -35,9 +35,9 @@ public class SubmitCommand implements CommandExecutor {
         for (String s : args) {
             answerBuilder.append(s);
         }
+        plugin.reloadConfig();
         String answer = answerBuilder.toString();
         FileConfiguration config = plugin.getConfig();
-        config.createSection("uses");
         int uses;
         try {
             if (!config.contains("uses." + answer)) {
@@ -56,9 +56,11 @@ public class SubmitCommand implements CommandExecutor {
         } catch (NullPointerException npe) {
             npe.printStackTrace();
             uses = 0;
+        } finally {
+            plugin.saveConfig();
         }
         int maxUse = (PuzzleBot.maxUseMap.get(answer) == -1) ? uses + 1 : PuzzleBot.maxUseMap.get(answer);
-        if (uses > maxUse) {
+        if (uses >= maxUse) {
             sender.sendMessage("" + ChatColor.RED + "Sorry, you were too late to make this submission");
             return true;
         }
