@@ -34,9 +34,15 @@ public class SubmitCommand implements CommandExecutor {
         StringBuilder answerBuilder = new StringBuilder();
         for (String s : args) {
             answerBuilder.append(s);
+            answerBuilder.append(" ");
         }
         plugin.reloadConfig();
-        String answer = answerBuilder.toString();
+        String answer = answerBuilder.toString().trim();
+        logger.info("Player " + sender.getName() + " submitted answer " + answer);
+        if (!PuzzleBot.hasAnswer(answer)) {
+            sender.sendMessage("" + ChatColor.RED + "Sorry, that is not a correct answer :(");
+            return true;
+        }
         FileConfiguration config = plugin.getConfig();
         int uses;
         try {
@@ -62,10 +68,6 @@ public class SubmitCommand implements CommandExecutor {
         int maxUse = (PuzzleBot.maxUseMap.get(answer) == -1) ? uses + 1 : PuzzleBot.maxUseMap.get(answer);
         if (uses >= maxUse) {
             sender.sendMessage("" + ChatColor.RED + "Sorry, you were too late to make this submission");
-            return true;
-        }
-        if (!PuzzleBot.hasAnswer(answer)) {
-            sender.sendMessage("" + ChatColor.RED + "Sorry, that is not a correct answer :(");
             return true;
         }
         logger.info("Player " + sender.getName() + " submitted answer: " + answer + " in " + Helpers.displayLocation(((Player) sender).getLocation()));

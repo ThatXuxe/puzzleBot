@@ -18,4 +18,4 @@ permissions:
     default: true
   puzzlebot.admin:
     description: Allows administrator commands
-    default: false
+    default: true

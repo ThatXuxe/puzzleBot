@@ -50,22 +50,26 @@ public class PuzzleBot extends JavaPlugin {
     }
 
     public void reloadHashConfig() {
+        config = getConfig();
         reloadConfig();
         if (config.contains("answers")) {
             answers = config.getStringList("answers");
             logger.info("Answers have been initialized");
         } else
             logger.warning("No answers found in config.");
-        config.createSection("uses");
+
+        if (!config.contains("uses"))
+            config.createSection("uses");
+
         for (String s : answers) {
             String[] answer = {s.split("->")[0]};
             if (answer[0].contains("~")) {
                 answer = answer[0].split("~");
                 maxUseMap.put(answer[0], Integer.parseInt(answer[1]));
             } else {
-                answer = answer[0].split("~");
                 maxUseMap.put(answer[0], -1);
             }
+            logger.info("Answer registered: " + answer[0]);
             answersMap.put(answer[0], ActionsIterator.parseActions(s));
         }
     }
