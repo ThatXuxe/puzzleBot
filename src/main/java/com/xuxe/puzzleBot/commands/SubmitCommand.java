@@ -35,30 +35,34 @@ public class SubmitCommand implements CommandExecutor {
         for (String s : args) {
             answerBuilder.append(s);
         }
-        boolean hasUsedCommandBefore;
         String answer = answerBuilder.toString();
         FileConfiguration config = plugin.getConfig();
         config.createSection("uses");
+        int uses;
         try {
             if (!config.contains("uses." + answer)) {
                 List<String> players = new ArrayList<>();
                 players.add(sender.getName());
                 config.set("uses." + answer, players);
-                hasUsedCommandBefore = false;
+                uses = 0;
             } else {
                 List<String> players = config.getStringList("uses." + answer);
-                if (players.contains(sender.getName()))
-                    hasUsedCommandBefore = true;
-                else {
+                uses = players.size();
+                if (!players.contains(sender.getName()))
                     players.add(sender.getName());
-                    hasUsedCommandBefore = false;
-                }
+
                 config.set("uses." + answer, players);
             }
         } catch (NullPointerException npe) {
-            hasUsedCommandBefore = false;
+            npe.printStackTrace();
+            uses = 0;
         }
-        if (!PuzzleBot.hasAnswer(answer) && !hasUsedCommandBefore) {
+        int maxUse = (PuzzleBot.maxUseMap.get(answer) == -1) ? uses + 1 : PuzzleBot.maxUseMap.get(answer);
+        if (uses > maxUse) {
+            sender.sendMessage("" + ChatColor.RED + "Sorry, you were too late to make this submission");
+            return true;
+        }
+        if (!PuzzleBot.hasAnswer(answer)) {
             sender.sendMessage("" + ChatColor.RED + "Sorry, that is not a correct answer :(");
             return true;
         }

@@ -15,7 +15,9 @@ public class PuzzleBot extends JavaPlugin {
     public static HashMap<String, List<Action>> answersMap = new HashMap<>();
     private FileConfiguration config;
     private static List<String> answers = new ArrayList<>();
+    public static HashMap<String, Integer> maxUseMap = new HashMap<>();
     private Logger logger;
+
     public PuzzleBot() {
         config = getConfig();
         logger = getLogger();
@@ -41,7 +43,7 @@ public class PuzzleBot extends JavaPlugin {
         logger.info("PuzzleBot has started.");
 
         getCommand("submit").setExecutor(new SubmitCommand(this, logger));
-        getCommand("puzzle reload").setExecutor(new ReloadCommand(this));
+        getCommand("puzzle").setExecutor(new ReloadCommand(this));
         reloadHashConfig();
         config.options().copyDefaults(true);
         saveConfig();
@@ -56,15 +58,22 @@ public class PuzzleBot extends JavaPlugin {
             logger.warning("No answers found in config.");
 
         for (String s : answers) {
-            answersMap.put(s.split("->")[0], ActionsIterator.parseActions(s));
+            String[] answer = {s.split("->")[0]};
+            if (answer[0].contains("~")) {
+                answer = answer[0].split("~");
+                maxUseMap.put(answer[0], Integer.parseInt(answer[1]));
+            } else {
+                answer = answer[0].split("~");
+                maxUseMap.put(answer[0], -1);
+            }
+            answersMap.put(answer[0], ActionsIterator.parseActions(s));
         }
-        logger.info("answers loaded and mapped.");
     }
+}
     //Action sequence
     /*
         answers:
-            -foo->kill->tp(2003,123,423)->message(heyhey)->kill->firework
+            -foo~5->kill->tp(2003,123,423)->message(heyhey)->kill->firework
             -bar->tp(1233,-121,422)->message(hiya)
         #foo is the answer, and every -> represents an action to be taken
     */
-}
