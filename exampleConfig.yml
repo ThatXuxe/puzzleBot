@@ -1,3 +1,5 @@
 answers: 
-  -foo->tp(world,2003,123,423)->message(heyhey)->kill 
+  -foo~8->tp(world,2003,123,423)->message(heyhey)->kill 
   -bar->tp(world,1233,-121,422)->message(hiya)
+# 8 unique players will be able to submit foo, no more.
+# any number of players can submit bar
